@@ -24,29 +24,17 @@ public class AutenticacaoController {
 
     @Autowired
     private TokenService tokenService;
-/*/
     @PostMapping
     public ResponseEntity efetuarLogin(@RequestBody @Valid DadosAutenticacao dados) {
-        var authenticationToken = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha());
-        var authentication = manager.authenticate(authenticationToken);
-
-        var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
-
-        return ResponseEntity.ok(new DadosTokenJWT(tokenJWT));
-    }*/
-    @PostMapping
-public ResponseEntity efetuarLogin(@RequestBody @Valid DadosAutenticacao dados) {
-    try {
-        var authenticationToken = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha());
-        System.out.println("---------------" + authenticationToken);
-        var authentication = manager.authenticate(authenticationToken);
-        var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
-
-        return ResponseEntity.ok(new DadosTokenJWT(tokenJWT));
-    } catch (Exception e) {
-        e.printStackTrace(); // verá no terminal o motivo real
-        return ResponseEntity.status(401).body("Credenciais inválidas.");
+        try {
+            var authenticationToken = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha());
+            var authentication = manager.authenticate(authenticationToken);
+            var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
+            return ResponseEntity.ok(new DadosTokenJWT(tokenJWT));
+        } catch (Exception e) {
+            e.printStackTrace(); 
+            return ResponseEntity.status(401).body("Credenciais inválidas.");
+        }
     }
-}
 
 }
