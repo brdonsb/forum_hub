@@ -1,7 +1,11 @@
 package br.com.brdonsb.forum_hub.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import br.com.brdonsb.forum_hub.dto.DadosCadastroTopico;
 import br.com.brdonsb.forum_hub.dto.DadosDetalhamentoTopico;
+import br.com.brdonsb.forum_hub.dto.DadosListagemTopico;
 import br.com.brdonsb.forum_hub.model.Topico;
 import br.com.brdonsb.forum_hub.model.Usuario;
 import br.com.brdonsb.forum_hub.repository.TopicoRepository;
@@ -33,5 +38,11 @@ public class TopicoController {
         repository.save(topico);
         var uri = uriBuilder.path("/topico/{id}").buildAndExpand(topico.getId()).toUri();
         return ResponseEntity.created(uri).body(new DadosDetalhamentoTopico(topico));
-    }    
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<DadosListagemTopico>> listar(@PageableDefault(size = 10, sort = {"dataCriacao"}) Pageable paginacao) {
+        var page = repository.findAll(paginacao).map(DadosListagemTopico::new);
+        return ResponseEntity.ok(page);
+    }
 }
