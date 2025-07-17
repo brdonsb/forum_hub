@@ -1,13 +1,11 @@
 package br.com.brdonsb.forum_hub.infra.security;
 
 import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import br.com.brdonsb.forum_hub.repository.UsuarioRepository;
 import br.com.brdonsb.forum_hub.service.TokenService;
 import jakarta.servlet.FilterChain;
@@ -19,7 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityFilter extends OncePerRequestFilter{
     @Autowired
     private TokenService tokenService;
-
     @Autowired
     private UsuarioRepository repository;
 
