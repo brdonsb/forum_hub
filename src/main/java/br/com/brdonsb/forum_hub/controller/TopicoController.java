@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,8 @@ import br.com.brdonsb.forum_hub.dto.DadosAtualizacaoTopico;
 import br.com.brdonsb.forum_hub.dto.DadosCadastroTopico;
 import br.com.brdonsb.forum_hub.dto.DadosDetalhamentoTopico;
 import br.com.brdonsb.forum_hub.dto.DadosListagemTopico;
+import br.com.brdonsb.forum_hub.dto.MensagemErroDTO;
+import br.com.brdonsb.forum_hub.infra.security.exception.TopicoDuplicadoException;
 import br.com.brdonsb.forum_hub.model.Topico;
 import br.com.brdonsb.forum_hub.model.Usuario;
 import br.com.brdonsb.forum_hub.repository.TopicoRepository;
@@ -37,6 +40,10 @@ public class TopicoController {
     @Transactional
 
     public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroTopico dados, UriComponentsBuilder uriBuilder){
+        Topico topicoDuplicado = repository.findByTituloAndMensagem(dados.titulo(), dados.mensagem());
+        if (topicoDuplicado != null) {
+           throw new TopicoDuplicadoException();
+        }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Usuario autor = (Usuario) authentication.getPrincipal();
         var topico = new Topico(dados, autor);

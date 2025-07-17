@@ -6,4 +6,6 @@ import br.com.brdonsb.forum_hub.model.Topico;
 
 public interface TopicoRepository extends JpaRepository<Topico, Long>{
 
+    Topico findByTituloAndMensagem(String titulo, String mensagem);
+
 }
