@@ -1,6 +1,8 @@
 package br.com.brdonsb.forum_hub.model;
 
 import java.time.LocalDate;
+
+import br.com.brdonsb.forum_hub.dto.DadosAtualizacaoTopico;
 import br.com.brdonsb.forum_hub.dto.DadosCadastroTopico;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -46,5 +48,14 @@ public class Topico {
         this.status = Status.ATIVO;
         this.autor = autor;
         this.curso = dados.curso();
+    }
+
+    public void atualizarInformacoes(DadosAtualizacaoTopico dados) {
+        if (dados.titulo()!= null) {
+            this.titulo = dados.titulo();        
+        }
+        if (dados.mensagem()!= null) {
+            this.mensagem = dados.mensagem();        
+        }
     }
 }
