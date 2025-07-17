@@ -1,9 +1,10 @@
 package br.com.brdonsb.forum_hub.model;
 
-import java.time.LocalDateTime;
-
+import java.time.LocalDate;
 import br.com.brdonsb.forum_hub.dto.DadosCadastroTopico;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,21 +30,21 @@ public class Topico {
     private Long id;
     private String titulo;
     private String mensagem;
-    private LocalDateTime dataCriacao;
+    private LocalDate dataCriacao;
+    @Enumerated(EnumType.STRING)
     private Status status;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
     private Usuario autor;
+    @Enumerated(EnumType.STRING)
     private Curso curso;
 
-    public Topico(DadosCadastroTopico dados) {
+    public Topico(DadosCadastroTopico dados, Usuario autor) {
         this.titulo = dados.titulo();
         this.mensagem = dados.mensagem();
-        this.dataCriacao = dados.dataCriacao();
-        this.status = dados.status();
-        this.autor = new Usuario(dados.autor());
+        this.dataCriacao = LocalDate.now();
+        this.status = Status.ATIVO;
+        this.autor = autor;
         this.curso = dados.curso();
     }
 }
-
