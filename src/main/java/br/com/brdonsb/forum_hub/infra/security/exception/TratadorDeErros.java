@@ -51,4 +51,9 @@ public class TratadorDeErros {
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(new MensagemErroDTO(ex.getMessage()));
     }
+    @ExceptionHandler(TopicoNullException.class)
+    public ResponseEntity<MensagemErroDTO> tratarTopicoNull(TopicoNullException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(new MensagemErroDTO(ex.getMessage()));
+    }
 }

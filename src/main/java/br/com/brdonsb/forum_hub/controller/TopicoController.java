@@ -22,6 +22,7 @@ import br.com.brdonsb.forum_hub.dto.DadosDetalhamentoTopico;
 import br.com.brdonsb.forum_hub.dto.DadosListagemTopico;
 import br.com.brdonsb.forum_hub.dto.MensagemErroDTO;
 import br.com.brdonsb.forum_hub.infra.security.exception.TopicoDuplicadoException;
+import br.com.brdonsb.forum_hub.infra.security.exception.TopicoNullException;
 import br.com.brdonsb.forum_hub.model.Topico;
 import br.com.brdonsb.forum_hub.model.Usuario;
 import br.com.brdonsb.forum_hub.repository.TopicoRepository;
@@ -76,7 +77,10 @@ public class TopicoController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity excluir(@PathVariable Long id){
-        var topico = repository.getReferenceById(id);
+        var topico = repository.findById(id);
+        if (topico.isEmpty()) {
+           throw new TopicoNullException();
+        } 
         repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
