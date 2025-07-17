@@ -62,14 +62,17 @@ public class TopicoController {
     @GetMapping("/{id}")
     @Transactional
     public ResponseEntity detalhar(@PathVariable Long id){
-        var topico = repository.getReferenceById(id);
+        var topico = repository.findById(id)
+            .orElseThrow(TopicoNullException::new);
         return ResponseEntity.ok(new DadosDetalhamentoTopico(topico));
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoTopico dados, @PathVariable Long id){
-        var topico = repository.getReferenceById(id);
+    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoTopico dados, @PathVariable Long id) {
+        var topico = repository.findById(id)
+            .orElseThrow(TopicoNullException::new);
+
         topico.atualizarInformacoes(dados);
         return ResponseEntity.ok(new DadosDetalhamentoTopico(topico));
     }
@@ -77,10 +80,8 @@ public class TopicoController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity excluir(@PathVariable Long id){
-        var topico = repository.findById(id);
-        if (topico.isEmpty()) {
-           throw new TopicoNullException();
-        } 
+        repository.findById(id)
+            .orElseThrow(TopicoNullException::new);
         repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
